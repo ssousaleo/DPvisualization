@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="../css/foundation.css" />
     <link rel="stylesheet" type="text/css" href="../css/app.css">
     <script src="../modules/jquery/dist/jquery.min.js"></script>
-
+    
   </head>
   <body>
 
@@ -29,7 +29,7 @@
 
       <div class="large-7 small-6 columns" role="content">
         <article>
-          <chord-diagram></chord-diagram>
+          <chord-diagram id="chordDiagramId"></chord-diagram>
           <h6 class="text-center">Sintomas no elemento<span><strong> <text id="labelElement"></text></strong></span></h6>
           
         </article>
@@ -55,38 +55,27 @@
 
       <fieldset id="tooltip" class="row secondary">
         <div class="large-12 small-12 columns">
-          <h6>{{ tooltip.sname }} imported from  {{ tooltip.tname }} : $ {{ qFormat(tooltip.svalue) }}M</h6>
-          {{ pFormat(tooltip.svalue/tooltip.stotal) }} of {{ tooltip.sname }}'s Total ($ {{ qFormat(tooltip.stotal) }}M)
-          {{ pFormat(tooltip.svalue/tooltip.mtotal) }} of Total of $ {{ qFormat(tooltip.mtotal) }}M
-        </div>
-        <div class="large-12 small-12 columns">
-          <h6>{{ tooltip.tname }} imported from  {{ tooltip.sname }} : $ {{ qFormat(tooltip.tvalue) }}M</h6>
-          {{ pFormat(tooltip.tvalue/tooltip.ttotal) }} of {{ tooltip.tname }}'s Total ($ {{ qFormat(tooltip.ttotal) }}M)
-          {{ pFormat(tooltip.tvalue/tooltip.mtotal) }} of Total of $ {{ qFormat(tooltip.mtotal) }}M
+          <h6><text id="tooltipLabel"></text></h6>
         </div>
       </fieldset>
 
     </div>
 
-    <!--footer class="row">
-      <div class="large-12 columns">
-        <ul class="inline-list left">
-          <li>Colors by <a target="_blank" href="http://en.wikipedia.org/wiki/Paul_Klee">Paul Klee</a></li>
-          <li>Design by <a target="_blank" href="http://www.delimited.io/blog">delimited.io</a></li>
-          <li>Data from <a target="_blank" href="http://www.correlatesofwar.org">Correlates of War</a></li>
-        </ul>
-      </div>
-    </footer-->
 
     <script src="../node_modules/d3/d3.js"></script>
     <!--script src="../js/mainController.js"></script>
-    <script src="../js/matrixFactory.js"></script>
-    <script src="../js/chordDirective.js"></script-->
+    <script src="../js/matrixFactory.js"></script-->
+    <script src="../js/createChordDirective.js"></script>
     <script src="../js/importData.js"></script>
     <script src="../js/showSymptoms.js"></script>
+    <script src="../js/createChordMatrix.js"></script>
+    <script src="../js/mapper.js"></script>
+    <script src="../js/underscore.js"></script>
+
 
     <script>
       importData();
+      createChordMatrix();
     </script>
   </body>
 </html>

@@ -1,39 +1,20 @@
 function importData(){
-    d3.json('../data/symptoms.json', function(err, data){
-        j = 0;
-        var firstClassName;
+    d3.csv('../data/trade.csv', function (err, data) {
 
-        var canvas = d3.select('.side-nav').append("form")
-            .attr("width", 150)
-            .attr("height", 100);
+        var scope = {};
 
-        canvas.selectAll("label")
-            .data(data)
-            .enter()
-            .append("label")
-            .text(function (d, i) {
-                if (j == i){
-                    firstClassName = d.class.sourceFile.name;
-                    showSymptoms(d);
-                }
-                return (d.class.sourceFile.name).concat(" ");
-             })
-            .insert("input")
-            .attr({
-                type: "radio",
-                name: "classes",
-                value: function (d, i) {
-                    return i;
-                }
-            })
-            .property("checked", function (d, i) {
-                $("#labelElement").html(firstClassName);
-                return i === j;
-            })
-            .on("click", function(d,i) {
-                $("#labelElement").html(d.class.sourceFile.name);
-                showSymptoms(d);
-            });
+        data.forEach(function (d) {
+          d.year  = +d.year;
+          d.flow1 = +d.flow1;
+          d.flow2 = +d.flow2;
+          
+          if (!scope[d.year]) {
+            scope[d.year] = []; // STORED BY YEAR
+          }
+          scope[d.year].push(d);
+        });
+        var el = $("#chordDiagramId");
         
-    });
+        createChordDirective(scope[2000], el);
+      });
 }

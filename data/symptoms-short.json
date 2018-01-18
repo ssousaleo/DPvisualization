@@ -1,0 +1,87 @@
+[
+	{
+		"class":{
+			"sourceFile": {
+				"file": "/Users/leonardo/project/APP.java",
+				"fullyQualifiedName":"br.com.meyer.repository.APP",
+				"name":"APP"
+			},
+			"syndrome":[
+				{
+					"id":14,
+					"element":{
+						"type":"method",
+						"name":"App.authenticate"
+					},
+					"type":"smell",
+					"value":"Long Method",
+					"relation":[{
+						"type":"agglomeration",
+						"relatedSymptoms":[
+							15
+						]
+					},
+					{
+						"type":"normal",
+						"relatedSymptoms":[
+							16,
+							17
+						]
+					}]
+				},
+				{
+					"id":15,
+					"element":{
+						"type":"class",
+						"name":"APP"
+					},
+					"type":"smell",
+					"value":"God Class",
+					"relation":[{
+						"type":"agglomeration",
+						"relatedSymptoms":[
+							14
+						]
+					},
+					{
+						"type":"normal",
+						"relatedSymptoms":[
+							16
+						]
+					}]
+				},
+				{
+					"id":16,
+					"element":{
+						"type":"class",
+						"name":"APP"
+					},
+					"type":"Princípio de Orientação de Objetos",
+					"value":"Resposabilidade Única",
+					"relation":[{
+						"type":"normal",
+						"relatedSymptoms":[
+							14,
+							15
+						]
+					}]
+				},
+				{
+					"id":17,
+					"element":{
+						"type":"class",
+						"name":"APP"
+					},
+					"type":"Atributo de Qualidade",
+					"value":"Complexidade",
+					"relation":[{
+						"type":"normal",
+						"relatedSymptoms":[
+							14
+						]
+					}]
+				}
+			]
+		}
+	}
+]
