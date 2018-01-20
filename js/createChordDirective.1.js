@@ -1,9 +1,4 @@
-angular.module('app').directive('chordDiagram', ['$window', 'matrixFactory',
-
-function ($window, matrixFactory) {
-
-  var link = function ($scope, $el, $attr) {
-
+function createChordDirective (data, el) {
     var size = [750, 750]; // SVG SIZE WIDTH, HEIGHT
     var marg = [50, 50, 50, 50]; // TOP, RIGHT, BOTTOM, LEFT
     var dims = []; // USABLE DIMENSIONS
@@ -13,12 +8,13 @@ function ($window, matrixFactory) {
     var colors = d3.scale.ordinal()
       .range(['#9C6744','#C9BEB9','#CFA07E','#C4BAA1','#C2B6BF','#121212','#8FB5AA','#85889E','#9C7989','#91919C','#242B27','#212429','#99677B','#36352B','#33332F','#2B2B2E','#2E1F13','#2B242A','#918A59','#6E676C','#6E4752','#6B4A2F','#998476','#8A968D','#968D8A','#968D96','#CC855C', '#967860','#929488','#949278','#A0A3BD','#BD93A1','#65666B','#6B5745','#6B6664','#695C52','#56695E','#69545C','#565A69','#696043','#63635C','#636150','#333131','#332820','#302D30','#302D1F','#2D302F','#CFB6A3','#362F2A']);
 
+    var i = 0;
     var chord = d3.layout.chord()
       .padding(0.02)
       .sortGroups(d3.descending)
       .sortSubgroups(d3.ascending);
 
-    var matrix = matrixFactory.chordMatrix()
+    var matrix = createChordMatrix().chordMatrix()
       .layout(chord)
       .filter(function (item, r, c) {
         return (item.importer1 === r.name && item.importer2 === c.name) ||
@@ -48,8 +44,8 @@ function ($window, matrixFactory) {
 
     var path = d3.svg.chord()
       .radius(innerRadius);
-
-    var svg = d3.select($el[0]).append("svg")
+    
+    var svg = d3.select(el[0]).append("svg")
       .attr("class", "chart")
       .attr({width: size[0] + "px", height: size[1] + "px"})
       .attr("preserveAspectRatio", "xMinYMin")
@@ -64,8 +60,9 @@ function ($window, matrixFactory) {
       .attr("transform", "translate(10, 10)")
       .text("Updating...");
 
-    $scope.drawChords = function (data) {
 
+    //DRAW CHORD FUNCTION
+    var drawChords = function (data, el) {
       messages.attr("opacity", 1);
       messages.transition().duration(1000).attr("opacity", 0);
 
@@ -138,7 +135,7 @@ function ($window, matrixFactory) {
       function groupClick(d) {
         d3.event.preventDefault();
         d3.event.stopPropagation();
-        $scope.addFilter(d._id);
+        //$scope.addFilter(d._id);
         resetChords();
       }
 
@@ -147,7 +144,12 @@ function ($window, matrixFactory) {
         d3.event.stopPropagation();
         dimChords(d);
         d3.select("#tooltip").style("opacity", 1);
-        $scope.updateTooltip(matrix.read(d));
+        updateTooltip(matrix.read(d));
+      }
+
+      function updateTooltip(d) {
+        $("#tooltipLabel").html(i);
+        i = i + 1;
       }
 
       function hideTooltip() {
@@ -156,6 +158,7 @@ function ($window, matrixFactory) {
         d3.select("#tooltip").style("opacity", 0);
         resetChords();
       }
+
 
       function resetChords() {
         d3.event.preventDefault();
@@ -176,8 +179,10 @@ function ($window, matrixFactory) {
       }
     }; // END DRAWCHORDS FUNCTION
 
+    drawChords(data, el);
+
     function resize() {
-      var width = $el.parent()[0].clientWidth;
+      var width = el.parent()[0].clientWidth;
       svg.attr({
         width: width,
         height: width / (size[0] / size[1])
@@ -186,17 +191,9 @@ function ($window, matrixFactory) {
 
     resize();
       
-    $window.addEventListener("resize", function () {
+    /*$window.addEventListener("resize", function () {
       resize();
-    });
+    });*/
   }; // END LINK FUNCTION
-
-  return {
-    link: link,
-    restrict: 'EA'
-  };
-
-}]);
-
 
 

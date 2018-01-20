@@ -99,10 +99,8 @@
 					},
 					"type":"smell",
 					"value":"Intensive Coupling",
-					"relation":{
+					"relation":[{
 						"type":"normal",
-						"relation":[{
-						"type":"agglomeration",
 						"relatedSymptoms":[
 							0,
 							1,
@@ -120,7 +118,6 @@
 							11
 						]
 					}]
-					}
 				},
 				{
 					"id":4,

@@ -1,7 +1,6 @@
 function createChordMatrix() {
 
   var chordMatrix = function () {
-
     var _matrix = [], dataStore = [], _id = 0;
     var matrixIndex = [], indexHash = {};
     var chordLayout, layoutCache;
@@ -93,16 +92,23 @@ function createChordMatrix() {
       });
     };
 
-    matrix.addKey = function (key, data) {
+    matrix.addKey = function (key, sId, data) {
       if (!indexHash[key]) {
-        indexHash[key] = {name: key, data: data || {}};
+        indexHash[key] = {name: key, sId: sId, data: data || {}};
       }
     };
 
-    matrix.addKeys = function (props, fun) {
+    /*matrix.addKey = function (key, data) {
+      if (!indexHash[key]) {
+        indexHash[key] = {name: key, data: data || {}};
+      }
+    };*/
+
+    matrix.addKeys = function (props, idProps, fun) {
       for (var i = 0; i < dataStore.length; i++) {
         for (var j = 0; j < props.length; j++) {
-          this.addKey(dataStore[i][props[j]], fun ? fun(dataStore[i], props[j]):{});
+          //this.addKey(dataStore[i][props[j]], fun ? fun(dataStore[i], props[j]):{});
+          this.addKey(dataStore[i][props[j]], dataStore[i][idProps[j]], fun ? fun(dataStore[i], props[j],dataStore[i][idProps[j]]):{});
         }
       }
       return this;
@@ -205,6 +211,7 @@ function createChordMatrix() {
         m.gname  = g.name;
         m.gdata  = g.data;
         m.gvalue = d.value;
+        m.gId = g.sId;                //SYMPTOM ID
       }
       m.mtotal = _matrix.reduce(function (m1, n1) { 
         return m1 + n1.reduce(function (m2, n2) { return m2 + n2; }, 0);

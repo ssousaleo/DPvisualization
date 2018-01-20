@@ -1,4 +1,4 @@
-function createChordMatrix() {
+angular.module('app').factory('matrixFactory', [function () {
 
   var chordMatrix = function () {
 
@@ -215,8 +215,7 @@ function createChordMatrix() {
     return matrix;
   };
 
-  
   return {
     chordMatrix: chordMatrix
   };
-}
+}]);

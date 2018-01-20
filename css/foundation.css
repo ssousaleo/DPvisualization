@@ -108,7 +108,7 @@ select {
   margin-right: auto;
   margin-top: 0;
   margin-bottom: 0;
-  max-width: 62.5em; }
+  max-width: 85em; }
   .row:before, .row:after {
     content: " ";
     display: table; }
@@ -868,10 +868,10 @@ select {
     width: 8.33333%; }
 
   .large-2 {
-    width: 20%; }
+    width: 15%; }
 
   .large-3 {
-    width: 30%; }
+    width: 20%; }
 
   .large-4 {
     width: 33.33333%; }
