@@ -1,3 +1,7 @@
+body {
+  background-color: whitesmoke;
+}
+
 #tooltip {
   background-color: white;
   pointer-events: none;
@@ -10,6 +14,19 @@
   opacity: 0;
   bottom: 10%;
   right: 5%;
+  box-shadow: 5px 5px 2.5px #666;
+}
+
+#symptombox {
+  background-color: white;
+  pointer-events: none;
+  font-size: 12px;
+  color: grey;
+  position: relative;
+  width: 500px;
+  border-radius: 6px;
+  opacity: 1;
+  bottom: 20%;
   box-shadow: 5px 5px 2.5px #666;
 }
 

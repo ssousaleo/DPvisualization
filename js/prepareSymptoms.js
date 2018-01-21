@@ -1,5 +1,4 @@
-function prepareSymptoms(element) { 
-    //console.log(elemnt);
+function prepareSymptoms(element) {
     var csv = [];
     var syndrome = element.class.syndrome;
 
@@ -16,14 +15,20 @@ function prepareSymptoms(element) {
 
     //update the relations, changing the id for the name
     syndrome.forEach(function (d) {
+       
         if(!relations[d.id]){
-            relations[d.value] = []
+            relations[d.id] = []
         }
         //get all the relations
-        d.relation.forEach(function (r) {
-            var rel  = []
+        d.relation.forEach(function (r) {            
+            
             r.relatedSymptoms.forEach(function (rs){
-                rel.push(rs);
+                var rel  = {
+                    id: rs,                // the id of the related symptom
+                    name: ids[rs],         // the name of the related symptom
+                    type: r.type,          // the type of relation betweent the symptoms
+                };
+
                 csv.push({
                     symptom1: d.value,
                     symptom2: ids[rs],
@@ -33,8 +38,9 @@ function prepareSymptoms(element) {
                     idS1: d.id,
                     idS2: rs,
                 });
+                relations[d.id].push(rel);
             });
-            relations[d.value].push(rel);
+            
         });
         
     });

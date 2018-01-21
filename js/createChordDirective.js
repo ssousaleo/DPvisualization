@@ -49,7 +49,7 @@ function createChordDirective (data, el, relations) {
     .attr("class", "chart")
     .attr({width: size[0] + "px", height: size[1] + "px"})
     .attr("preserveAspectRatio", "xMinYMin")
-    .attr("viewBox", "0 0 " + size[0] + " " + size[1]);
+    .attr("viewBox", "-40 0 " + size[0] + " " + size[1]);
 
   var container = svg.append("g")
     .attr("class", "container")
@@ -57,8 +57,8 @@ function createChordDirective (data, el, relations) {
 
   var messages = svg.append("text")
     .attr("class", "messages")
-    .attr("transform", "translate(10, 10)")
-    .text("Updating...");
+    .attr("transform", "translate(10, 20)")
+    .text("Atualizando...");
 
 
   //DRAW CHORD FUNCTION
@@ -87,8 +87,8 @@ function createChordDirective (data, el, relations) {
     gEnter.append("text")
       .attr("dy", ".35em")
       .on("click", groupClick)
-      .on("mouseover", dimChords)
-      .on("mouseout", resetChords)
+      .on("mouseover", updateGroup)
+      .on("mouseout", hideTooltip)
       .text(function (d) {
         return d._id;
       });
@@ -181,8 +181,6 @@ function createChordDirective (data, el, relations) {
     }
 
     function dimChords(d) {
-      console.log(matrix.read(d));
-      
       d3.event.preventDefault();
       d3.event.stopPropagation();
       container.selectAll("path.chord").style("opacity", function (p) {
@@ -192,6 +190,38 @@ function createChordDirective (data, el, relations) {
           return (p.source._id === d._id || p.target._id === d._id) ? 0.9: 0.1;
         }
       });
+      
+    }
+
+    function updateGroup(d) {
+      d3.event.preventDefault();
+      d3.event.stopPropagation();
+      dimChords(d);
+      d3.select("#tooltip").style("opacity", 1);
+      updateTooltipGroup(d);
+    }
+    
+    //UPDATE THE TOOLTIP WILL ALL THE RELATIONS OF A SYMPTOM
+    function updateTooltipGroup(d) {
+      try{
+        var info = matrix.read(d);    //info now has the symptom id (gid) and the symptom name (gname)
+    
+        var rel = relations[info.gid];
+
+        var html = "<strong>"+ info.gname + "</strong> se relaciona com:<br>";
+        var i = 0;
+        
+        rel.forEach(function (item) {
+          html += "&nbsp;" + (++i) + ".<strong>" + item.name + "</strong>. Tipo de relacionamento: <strong>" + item.type + "</strong><br>";
+        });
+        
+        $("#tooltipLabel").html(html);
+
+       }catch(error){
+         console.log(error);
+                  
+         return;
+      }
     }
 
   }; // END DRAWCHORDS FUNCTION

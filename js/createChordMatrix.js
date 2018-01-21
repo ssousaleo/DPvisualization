@@ -92,9 +92,9 @@ function createChordMatrix() {
       });
     };
 
-    matrix.addKey = function (key, sId, data) {
+    matrix.addKey = function (key, sid, data) {
       if (!indexHash[key]) {
-        indexHash[key] = {name: key, sId: sId, data: data || {}};
+        indexHash[key] = {name: key, sid: sid, data: data || {}};
       }
     };
 
@@ -211,7 +211,7 @@ function createChordMatrix() {
         m.gname  = g.name;
         m.gdata  = g.data;
         m.gvalue = d.value;
-        m.gId = g.sId;                //SYMPTOM ID
+        m.gid = g.sid;                //SYMPTOM ID
       }
       m.mtotal = _matrix.reduce(function (m1, n1) { 
         return m1 + n1.reduce(function (m2, n2) { return m2 + n2; }, 0);
