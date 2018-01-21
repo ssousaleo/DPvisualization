@@ -1,4 +1,4 @@
-# DPvisualization
+DPvisualization
 =================
 The goal of this project is to represent the design problem symptoms through visualization mechanism.
 
