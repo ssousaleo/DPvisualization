@@ -10,6 +10,7 @@ function importData(){
     var scope = {};             //  STORE THE DATA
     var csv = [];               //  STORE THE DATA TO CREATE THE CHORD
     var relations = {};         //  STORE THE RELATIONS AMONG THE SYMPTOMS
+    var symptoms = {}           //  STORE THE SYMPTOMS WHERE THE SYMPOTM ID IS THE KEY
 
 
     d3.json('../data/symptoms-short.json', function(err, data){
@@ -59,13 +60,14 @@ function importData(){
         //CREATE THE CHORD DIAGRAM
         var el = $("#chordDiagramId");
         convertData();
-        createChordDirective(csv, el, relations);
+        createChordDirective(csv, el, symptoms, relations);
     });
 
     function convertData() {
         retorno = prepareSymptoms(scope[selectedClass.fullyQualifiedName]);
+
         csv = retorno[0];
-        
         relations = retorno[1];
+        symptoms = retorno[2];
     }
 }

@@ -3,7 +3,8 @@ function prepareSymptoms(element) {
     var syndrome = element.class.syndrome;
 
     var ids = {};           // store the pair id-name, where name comprises the symptom name
-    var relations ={}       // store the relations of each symptom
+    var relations = {}      // store the relations of each symptom
+    var symptoms = {}       // store all the symptoms organized by the id
 
     //update all the ids with their real symptom name
     syndrome.forEach(function (d) {
@@ -17,7 +18,8 @@ function prepareSymptoms(element) {
     syndrome.forEach(function (d) {
        
         if(!relations[d.id]){
-            relations[d.id] = []
+            relations[d.id] = [];
+            symptoms[d.id] = d;
         }
         //get all the relations
         d.relation.forEach(function (r) {            
@@ -45,5 +47,5 @@ function prepareSymptoms(element) {
         
     });
 
-    return [csv, relations];
+    return [csv, relations, symptoms];
 }

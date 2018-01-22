@@ -1,4 +1,4 @@
-function createChordDirective (data, el, relations) {
+function createChordDirective (data, el, symptoms, relations) {
   var size = [750, 750]; // SVG SIZE WIDTH, HEIGHT
   var marg = [50, 50, 50, 50]; // TOP, RIGHT, BOTTOM, LEFT
   var dims = []; // USABLE DIMENSIONS
@@ -136,6 +136,11 @@ function createChordDirective (data, el, relations) {
     function groupClick(d) {
       d3.event.preventDefault();
       d3.event.stopPropagation();
+
+
+      updateSymptomInfo(d);
+      d3.select("#symptombox").style("opacity", 1);
+
       //$scope.addFilter(d._id);
       resetChords();
     }
@@ -216,6 +221,33 @@ function createChordDirective (data, el, relations) {
         });
         
         $("#tooltipLabel").html(html);
+
+       }catch(error){
+         console.log(error);
+                  
+         return;
+      }
+    }
+
+    // UPDATE SYMPTOM INFO WITH ALL THE INFORMATION ABOUT THE SYMPTOM
+    function updateSymptomInfo(d) {
+      try{
+        var info = matrix.read(d);    //info now has the symptom id (gid) and the symptom name (gname)
+    
+        var rel = relations[info.gid];
+        var infoSymptom = symptoms[info.gid];
+
+        var html = "Sintoma: <text id='infoSimptom'>" + infoSymptom.value + "</text><br>";
+        html += "Tipo do sintoma: <text id='infoType'>" + infoSymptom.type + "</text><br>";
+        html += "Elemento afetado: <text id='infoElement'>" + infoSymptom.element.name + "</text> (<text id='infoElementType'>" + infoSymptom.element.type + "</text>)<br>"
+        html += "<p>Sintomas Relacionados:";
+        var i = 0;
+        rel.forEach(function (item) {
+          html += "<br>&nbsp;" + (++i) + "." + item.name + ". Tipo de relacionamento: " + item.type;
+        });
+        html += "</p>";
+
+        $("#infoSymptomDiv").html(html);
 
        }catch(error){
          console.log(error);

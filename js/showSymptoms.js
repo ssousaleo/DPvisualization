@@ -34,3 +34,7 @@ function changeLabelButton(elem) {
     }
      
 }
+
+function hideSymptomBox(params) {
+    d3.select("#symptombox").style("opacity", 0);
+}
