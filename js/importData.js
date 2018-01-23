@@ -8,6 +8,9 @@ function importData(){
         fullyQualifiedName: "",
     };          
     var scope = {};             //  STORE THE DATA
+    scope.filters = {};
+    scope.hasFilters = false;
+
     var csv = [];               //  STORE THE DATA TO CREATE THE CHORD
     var relations = {};         //  STORE THE RELATIONS AMONG THE SYMPTOMS
     var symptoms = {}           //  STORE THE SYMPTOMS WHERE THE SYMPOTM ID IS THE KEY
@@ -22,6 +25,26 @@ function importData(){
         }
         scope[d.class.sourceFile.fullyQualifiedName] = d;
     });
+
+    scope.addFilter = function(name){
+        scope.hasFilters = true;
+        scope.filters[name] = {
+            name: name,
+            hide: true,
+        };
+    }
+
+    scope.removeFilter = function(name){
+        delete scope.filters[name];
+        scope.hasFilters = false;
+
+        $.each(scope.filters, function (key, value){
+            if(value.hide == true){
+                scope.hasFilters = true;
+            }
+        });
+        
+    }
 
     var canvas = d3.select('.side-nav').append("form")
         .attr("width", 150)
@@ -60,7 +83,7 @@ function importData(){
         //CREATE THE CHORD DIAGRAM
         var el = $("#chordDiagramId");
         convertData();
-        createChordDirective(csv, el, symptoms, relations);
+        createChordDirective(csv, el, symptoms, relations, scope);
     });
 
     function convertData() {

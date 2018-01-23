@@ -1,4 +1,4 @@
-function createChordDirective (data, el, symptoms, relations) {
+function createChordDirective (data, el, symptoms, relations, scope) {
   var size = [750, 750]; // SVG SIZE WIDTH, HEIGHT
   var marg = [50, 50, 50, 50]; // TOP, RIGHT, BOTTOM, LEFT
   var dims = []; // USABLE DIMENSIONS
@@ -62,7 +62,7 @@ function createChordDirective (data, el, symptoms, relations) {
 
 
   //DRAW CHORD FUNCTION
-  var drawChords = function (data, el) {
+  var drawChords = function (data, el, filter) {
     messages.attr("opacity", 1);
     messages.transition().duration(1000).attr("opacity", 0);
 
@@ -137,12 +137,9 @@ function createChordDirective (data, el, symptoms, relations) {
       d3.event.preventDefault();
       d3.event.stopPropagation();
 
-
       updateSymptomInfo(d);
       d3.select("#symptombox").style("opacity", 1);
 
-      //$scope.addFilter(d._id);
-      resetChords();
     }
 
     function chordMouseover(d) {
@@ -241,6 +238,7 @@ function createChordDirective (data, el, symptoms, relations) {
         html += "Tipo do sintoma: <text id='infoType'>" + infoSymptom.type + "</text><br>";
         html += "Elemento afetado: <text id='infoElement'>" + infoSymptom.element.name + "</text> (<text id='infoElementType'>" + infoSymptom.element.type + "</text>)<br>"
         html += "<p>Sintomas Relacionados:";
+        
         var i = 0;
         rel.forEach(function (item) {
           html += "<br>&nbsp;" + (++i) + "." + item.name + ". Tipo de relacionamento: " + item.type;
@@ -249,16 +247,59 @@ function createChordDirective (data, el, symptoms, relations) {
 
         $("#infoSymptomDiv").html(html);
 
-       }catch(error){
-         console.log(error);
-                  
+       }catch(error){         
          return;
       }
     }
 
+
+    // function that updates the chord
+    function updateChordFilter() {
+      
+      if(scope && scope.hasFilters){
+        drawChords(data.filter(function (d) {
+          var fl = scope.filters;
+          var v1 = d.symptom1, v2 = d.symptom2;
+
+          if ((fl[v1] && fl[v1].hide) || (fl[v2] && fl[v2].hide)) {
+            return false;
+          }
+          return true;
+        }));
+      }else{
+        if (data){
+          drawChords(data);
+        }
+      }
+      
+    }
+
+    // in case there is any filter
+    if(filter){
+      updateChordFilter();
+    }
+
   }; // END DRAWCHORDS FUNCTION
 
-  drawChords(data, el);
+  drawChords(data, el, false);
+
+   //MONITOR THE CHECKBOXES OF SYMPTOMS
+   $(".symptomCheckboxes").click(function (d) {
+    //test if the checkbox is enabled or not
+    if(d.target.checked){
+      //console.log("remove filter");
+      
+      //update the filters by removing the symptom from the filter list
+      scope.removeFilter(d.target.id);
+    }else{
+      //console.log("add filter");
+      
+      scope.addFilter(d.target.id);
+      
+    }
+    drawChords(data, el, true);
+    
+  });
 
   function resize() {
     var width = el.parent()[0].clientWidth;
