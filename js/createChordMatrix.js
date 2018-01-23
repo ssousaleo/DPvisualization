@@ -219,6 +219,12 @@ function createChordMatrix() {
       return m;
     };
 
+    //RETURN THE ID OF THE SYMPTOM
+    matrix.getActivatedSymptomNames = function (){
+      return Object.keys(indexHash);
+      
+    }
+
     return matrix;
   };
 

@@ -5,6 +5,8 @@ function createChordDirective (data, el, symptoms, relations, scope) {
   dims[0] = size[0] - marg[1] - marg[3]; // WIDTH
   dims[1] = size[1] - marg[0] - marg[2]; // HEIGHT
 
+  var activatedSymptomInfo;    //store the name of the symptom that has the info displayed
+
   var colors = d3.scale.ordinal()
     .range(['#9C6744','#C9BEB9','#CFA07E','#C4BAA1','#C2B6BF','#121212','#8FB5AA','#85889E','#9C7989','#91919C','#242B27','#212429','#99677B','#36352B','#33332F','#2B2B2E','#2E1F13','#2B242A','#918A59','#6E676C','#6E4752','#6B4A2F','#998476','#8A968D','#968D8A','#968D96','#CC855C', '#967860','#929488','#949278','#A0A3BD','#BD93A1','#65666B','#6B5745','#6B6664','#695C52','#56695E','#69545C','#565A69','#696043','#63635C','#636150','#333131','#332820','#302D30','#302D1F','#2D302F','#CFB6A3','#362F2A']);
 
@@ -199,6 +201,9 @@ function createChordDirective (data, el, symptoms, relations, scope) {
       d3.event.preventDefault();
       d3.event.stopPropagation();
       dimChords(d);
+
+      activatedSymptomInfo = d._id;
+      
       d3.select("#tooltip").style("opacity", 1);
       updateTooltipGroup(d);
     }
@@ -277,6 +282,23 @@ function createChordDirective (data, el, symptoms, relations, scope) {
     // in case there is any filter
     if(filter){
       updateChordFilter();
+
+      var activatedSymptoms = matrix.getActivatedSymptomNames()
+      //Update the checkbox with all the activated symptoms
+      changeSymptomsCheckedAttribute(activatedSymptoms);
+      
+      //hide the symptom information panel
+      var temp = false;
+      for(j = 0; j < activatedSymptoms.length; j++){
+        if(activatedSymptomInfo == activatedSymptoms[j]){
+          temp = true;
+          break;
+        }
+      }
+
+      if(!temp){
+        d3.select("#symptombox").style("opacity", 0);
+      }
     }
 
   }; // END DRAWCHORDS FUNCTION
@@ -298,6 +320,16 @@ function createChordDirective (data, el, symptoms, relations, scope) {
       
     }
     drawChords(data, el, true);
+    
+  });
+
+  //MONITOR THE SELECT ALL SYMPTOMS
+  $("#buttonSelectSymptosm").click(function (d){
+    if (d.target.value === "Deselecionar todos"){
+        drawChords(data, el, true);
+    }else{
+      drawChords([], el, true);
+    }
     
   });
 

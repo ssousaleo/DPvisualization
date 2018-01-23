@@ -41,3 +41,19 @@ function changeLabelButton(elem) {
 function hideSymptomBox(params) {
     d3.select("#symptombox").style("opacity", 0);
 }
+
+function changeSymptomsCheckedAttribute(activatedSymptoms){
+    checkBoxes = $(".symptomCheckboxes");
+
+    for(i = 0; i < checkBoxes.length; i++){
+        checkBoxes[i].checked = false;    
+        for(j = 0; j < activatedSymptoms.length; j++){
+            if(checkBoxes[i].id == activatedSymptoms[j]){
+                checkBoxes[i].checked = true;
+                break;
+            }
+        }
+        
+    }
+    
+}
