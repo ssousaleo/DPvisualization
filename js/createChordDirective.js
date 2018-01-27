@@ -368,12 +368,13 @@ function createChordDirective (scope, data, selectedClass) {
         for(i = 0; i < classes.length; i++){
             idInput = classes[i];
 
-            var html = "<text id='" + idInput +"'> " + idInput + "</text>"
+            var html = "<text id='" + idInput +"'> " + idInput + "</text>";
             
             $(html).insertAfter("#" + idInput).on("click", function (d) {
               $("#"+ d.currentTarget.id).trigger("click");
             });
         }
+
         showSymptoms(scope[selectedClass.fullyQualifiedName]);
         
   }
@@ -386,11 +387,12 @@ function createChordDirective (scope, data, selectedClass) {
     d3.select("#divSymptoms").selectAll("input")
       .data(data.class.syndrome)
       .enter()
-      .append('label')
+      /*.append('label')
           .attr('for',function(d,i){ return 'a'+ i; })
           .text(function(d) { 
             return d.value + " "; 
-          })
+          })*/
+      .append("div")
       .append("input")
           .attr("checked", true)
           .attr("type", "checkbox")
@@ -399,6 +401,22 @@ function createChordDirective (scope, data, selectedClass) {
           .on("click", function (d) {
             updateChord(this);
           });
+
+     //INCLUDE A TEXT FIELD NEXT TO EACH INPUT
+     var idInput;
+     
+     for (index in symptoms){
+        idInput = symptoms[index].value;
+
+        var html = "<text id='" + idInput +"'> " + idInput + "</text>"
+        var idPattern = "input[id='" + idInput + "']";
+        
+        $(html).insertAfter(idPattern).on("click", function (d) {
+          idPattern = "input[id='" + d.currentTarget.id + "']";
+          
+          $(idPattern).trigger("click");
+        })
+     }
         
     //coloca o botão de filtro no estado original
     $("#buttonSelectSymptoms").text("Deselecionar todos");
