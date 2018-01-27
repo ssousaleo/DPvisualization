@@ -235,7 +235,6 @@ function createChordDirective (scope, data, selectedClass) {
 
        }catch(error){
          console.log(error);
-                  
          return;
       }
     }
