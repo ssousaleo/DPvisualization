@@ -1,6 +1,7 @@
 function createChordMatrix() {
 
   var chordMatrix = function () {
+    
     var _matrix = [], dataStore = [], _id = 0;
     var matrixIndex = [], indexHash = {};
     var chordLayout, layoutCache;
@@ -224,11 +225,10 @@ function createChordMatrix() {
       return Object.keys(indexHash);
       
     }
-
+    
     return matrix;
   };
 
-  
   return {
     chordMatrix: chordMatrix
   };

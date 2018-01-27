@@ -1,8 +1,4 @@
-/**
- * Since we are using the class qualified name as a key, thus we expect that the system won't have
- * two classes with the same qualified name
- */
-function importData(){
+function teste(){
     var selectedClass = {       // STORE THE SELECTED CLASS IN THE CLASS PANEL [CLASS, FULLQUALIFIEDNAME]
         name: "",
         fullyQualifiedName: "",
@@ -47,28 +43,42 @@ function importData(){
         
     }
 
-    /*var canvas = d3.select('.side-nav').append("form")
+    loadSymptoms(data, selectedClass);
+
+    /*var classname = document.getElementById("buttonSelectSymptoms");
+    classname.addEventListener("click", myFunction, false);
+
+    var myFunction = function() {
+        console.log("entrou");
+        
+    };*/
+
+    
+
+});
+
+}
+
+function loadSymptoms(data, selectedClass){
+    fullyQualifiedNames = [];
+    
+    var canvas = d3.select('.side-nav').append("form")
         .attr("width", 150)
         .attr("height", 100);
 
-    canvas.selectAll("label")
+    canvas.selectAll("input")
         .data(data)
         .enter()
-        .append("label")
-        .text(function (d, i) {
-            if (j == i){
-                selectedClass.name = d.class.sourceFile.name;
-                selectedClass.fullyQualifiedName = d.class.sourceFile.fullyQualifiedName;
-                
-                showSymptoms(d);
-            }
-            return (d.class.sourceFile.name).concat(" ");
-            })
-        .insert("input")
+        .append("div")
+            .attr("id", "divdoidona")
+        .append("input")
         .attr({
             type: "radio",
             name: "classes",
-            class: "classElements",
+            class: function (d) {
+                fullyQualifiedNames.push(d.class.sourceFile.fullyQualifiedName);
+                return d.class.sourceFile.name;
+            },
             value: function (d, i) {
                 return d.class.sourceFile.fullyQualifiedName;
             }
@@ -82,24 +92,21 @@ function importData(){
             selectedClass.fullyQualifiedName = d.class.sourceFile.fullyQualifiedName;
             
             $("#labelElement").html(selectedClass.name);
-            showSymptoms(d);            //UPDATE THE LIST OF SYMPTOMS IN THE RIGHT PANEL
-                        
-        });*/
+            //console.log(d);
+        });
 
+        //console.log(fullyQualifiedNames);
+                
+
+        $("<label>oi</label>").insertAfter(".DeviceRepository");
         
-
-        createChordDirective(scope, data, selectedClass);
-
-        /*var classname = document.getElementById("buttonSelectSymptoms");
-        classname.addEventListener("click", myFunction, false);
-
-        var myFunction = function() {
-            console.log("entrou");
+        /*canvas.selectAll("#divdoidona").selectAll("label")
+        .data(data)
+        .enter()
+        .append("text")
+        .text(function (d, i) {
+            return d.class.sourceFile.name;
+            })*/
             
-        };*/
 
-        
-    
-    });
-
-}
+  }

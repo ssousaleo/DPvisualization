@@ -1,4 +1,13 @@
-function createChordDirective (data, el, symptoms, relations, scope) {
+//function createChordDirective (csv, el, symptoms, relations, scope, selectedClass, data) {
+function createChordDirective (scope, data, selectedClass) {
+  var el = $("#chordDiagramId");  //REFERENCE FOR THE CHORD DIAGRAM IN THE HTML PAGE
+
+  var csv = [];               //  STORE THE DATA TO CREATE THE CHORD
+  var relations = {};         //  STORE THE RELATIONS AMONG THE SYMPTOMS
+  var symptoms = {}           //  STORE THE SYMPTOMS WHERE THE SYMPOTM ID IS THE KEY
+  var classes = [];           //  STORE THE CLASSES
+
+  
   var size = [750, 750]; // SVG SIZE WIDTH, HEIGHT
   var marg = [50, 50, 50, 50]; // TOP, RIGHT, BOTTOM, LEFT
   var dims = []; // USABLE DIMENSIONS
@@ -51,7 +60,7 @@ function createChordDirective (data, el, symptoms, relations, scope) {
     .attr("class", "chart")
     .attr({width: size[0] + "px", height: size[1] + "px"})
     .attr("preserveAspectRatio", "xMinYMin")
-    .attr("viewBox", "-40 0 " + size[0] + " " + size[1]);
+    .attr("viewBox", "0 0 " + size[0] + " " + size[1]);
 
   var container = svg.append("g")
     .attr("class", "container")
@@ -61,7 +70,7 @@ function createChordDirective (data, el, symptoms, relations, scope) {
     .attr("class", "messages")
     .attr("transform", "translate(10, 20)")
     .text("Atualizando...");
-
+  
 
   //DRAW CHORD FUNCTION
   var drawChords = function (data, el, filter) {
@@ -303,43 +312,155 @@ function createChordDirective (data, el, symptoms, relations, scope) {
 
   }; // END DRAWCHORDS FUNCTION
 
-  drawChords(data, el, false);
+  //CREATE THE CHORD DIAGRAM
+  function loadDataDiagram() {
+    var retorno = prepareSymptoms(scope[selectedClass.fullyQualifiedName]);
 
-   //MONITOR THE CHECKBOXES OF SYMPTOMS
-   $(".symptomCheckboxes").click(function (d) {
+    csv = retorno[0];
+    relations = retorno[1];
+    symptoms = retorno[2];
+  }
+
+  //FUNCTION TO LOAD AND SHOW THE CLASSES IN THE RIGHT PANEL
+  function showClassesPanel(){
+    
+    var canvas = d3.select('.side-nav').append("form")
+        .attr("width", 150)
+        .attr("height", 100);
+
+    canvas.selectAll("label")
+        .data(data)
+        .enter()
+        .append("div")
+        .insert("input")
+        .attr({
+            type: "radio",
+            name: "classes",
+            class: "classElements",
+            id: function(d){
+              classes.push(d.class.sourceFile.name);
+              return d.class.sourceFile.name;
+            },
+            value: function (d, i) {
+                return d.class.sourceFile.fullyQualifiedName;
+            }
+        })
+        .property("checked", function (d, i) {
+            $("#labelElement").html(selectedClass.name);
+            return i === j;
+        })
+        .on("click", function(d,i) {
+          inputClickEvent(d);            //UPDATE THE LIST OF SYMPTOMS IN THE RIGHT PANEL
+        });
+
+        // function that hadles the click event on the input
+        function inputClickEvent(d) {
+          selectedClass.name = d.class.sourceFile.name;
+          selectedClass.fullyQualifiedName = d.class.sourceFile.fullyQualifiedName;
+            
+          $("#labelElement").html(selectedClass.name);
+          showSymptoms(d);            //UPDATE THE LIST OF SYMPTOMS IN THE RIGHT PANEL
+
+          d3.select("#symptombox").style("opacity", 0);
+        }
+
+        //INCLUDE A TEXT FIELD NEXT TO EACH INPUT
+        var idInput;
+        for(i = 0; i < classes.length; i++){
+            idInput = classes[i];
+
+            var html = "<text id='" + idInput +"'> " + idInput + "</text>"
+            
+            $(html).insertAfter("#" + idInput).on("click", function (d) {
+              $("#"+ d.currentTarget.id).trigger("click");
+            });
+        }
+        showSymptoms(scope[selectedClass.fullyQualifiedName]);
+        
+  }
+
+
+  function showSymptoms(data) {
+    var container = $("#divSymptoms");
+    container.empty();
+
+    d3.select("#divSymptoms").selectAll("input")
+      .data(data.class.syndrome)
+      .enter()
+      .append('label')
+          .attr('for',function(d,i){ return 'a'+ i; })
+          .text(function(d) { 
+            return d.value + " "; 
+          })
+      .append("input")
+          .attr("checked", true)
+          .attr("type", "checkbox")
+          .attr("class", "symptomCheckboxes")
+          .attr("id", function(d,i) { return d.value; })
+          .on("click", function (d) {
+            updateChord(this);
+          });
+        
+    //coloca o botão de filtro no estado original
+    $("#buttonSelectSymptoms").text("Deselecionar todos");
+  }
+
+  function updateChord(element) {
     //test if the checkbox is enabled or not
-    if(d.target.checked){
-      //console.log("remove filter");
+    if(element.checked){
       
       //update the filters by removing the symptom from the filter list
-      scope.removeFilter(d.target.id);
+      scope.removeFilter(element.id);
     }else{
-      //console.log("add filter");
-      
-      scope.addFilter(d.target.id);
-      
+      scope.addFilter(element.id);
     }
-    drawChords(data, el, true);
-    
-  });
+    drawChords(csv, el, true);
+  }
 
-  //MONITOR THE SELECT ALL SYMPTOMS
-  $("#buttonSelectSymptosm").click(function (d){
+
+
+  loadDataDiagram();
+  showClassesPanel();
+  drawChords(csv, el, false);
+
+
+  //MONITOR THE SELECT OF ALL SYMPTOMS
+  $("#buttonSelectSymptoms").click(function (d){
     if (d.target.value === "Deselecionar todos"){
-        drawChords(data, el, true);
+        drawChords(csv, el, true);
     }else{
       drawChords([], el, true);
     }
     
   });
 
+  //MONITOR THE SELECTION OF A CLASS
+  $(".classElements").click(function (d){
+    try {
+      var retorno = prepareSymptoms(scope[d.target.value]);
+
+      csv = retorno[0];
+      relations = retorno[1];
+      symptoms = retorno[2];
+
+      drawChords(csv, el, false);
+    } catch (error) {
+      return;
+    }
+    
+    
+  });
+  
+
   function resize() {
     var width = el.parent()[0].clientWidth;
+
     svg.attr({
       width: width,
       height: width / (size[0] / size[1])
     });
   }
+
 
   resize();
     

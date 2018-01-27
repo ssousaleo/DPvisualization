@@ -1,4 +1,4 @@
-function showSymptoms(data) {
+/*function showSymptoms(data) {
     var container = $("#divSymptoms");
 
     container.empty();
@@ -14,13 +14,14 @@ function addSymptoms(data) {
     syndrome = data.class.syndrome;
 
     for(i = 0; i < syndrome.length; i++){
-        append += "<input type='checkbox' id='" + syndrome[i].value +  "' class='symptomCheckboxes' checked='true'><label> " + syndrome[i].value + "</label><br>";
+        append += "<input type='checkbox' id='" + syndrome[i].value +  "' class='symptomCheckboxes' checked='true' ><label> " + syndrome[i].value + "</label><br>";
     }
 
     return append;
-}
+}*/
 
 function changeLabelButton(elem) {
+    
     var value;
     if (elem.value === "Deselecionar todos"){
         elem.value = "Selecionar todos";
@@ -29,6 +30,7 @@ function changeLabelButton(elem) {
         elem.value = "Deselecionar todos";
         value = true;
     }
+    
 
     checkBoxes = $(".symptomCheckboxes");
 
