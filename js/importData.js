@@ -45,61 +45,10 @@ function importData(){
             }
         });
         
-    }
-
-    /*var canvas = d3.select('.side-nav').append("form")
-        .attr("width", 150)
-        .attr("height", 100);
-
-    canvas.selectAll("label")
-        .data(data)
-        .enter()
-        .append("label")
-        .text(function (d, i) {
-            if (j == i){
-                selectedClass.name = d.class.sourceFile.name;
-                selectedClass.fullyQualifiedName = d.class.sourceFile.fullyQualifiedName;
-                
-                showSymptoms(d);
-            }
-            return (d.class.sourceFile.name).concat(" ");
-            })
-        .insert("input")
-        .attr({
-            type: "radio",
-            name: "classes",
-            class: "classElements",
-            value: function (d, i) {
-                return d.class.sourceFile.fullyQualifiedName;
-            }
-        })
-        .property("checked", function (d, i) {
-            $("#labelElement").html(selectedClass.name);
-            return i === j;
-        })
-        .on("click", function(d,i) {
-            selectedClass.name = d.class.sourceFile.name;
-            selectedClass.fullyQualifiedName = d.class.sourceFile.fullyQualifiedName;
-            
-            $("#labelElement").html(selectedClass.name);
-            showSymptoms(d);            //UPDATE THE LIST OF SYMPTOMS IN THE RIGHT PANEL
-                        
-        });*/
-
-        
+    }   
 
         createChordDirective(scope, data, selectedClass);
 
-        /*var classname = document.getElementById("buttonSelectSymptoms");
-        classname.addEventListener("click", myFunction, false);
-
-        var myFunction = function() {
-            console.log("entrou");
-            
-        };*/
-
-        
-    
     });
 
 }

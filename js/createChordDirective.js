@@ -217,7 +217,7 @@ function createChordDirective (scope, data, selectedClass) {
       updateTooltipGroup(d);
     }
     
-    //UPDATE THE TOOLTIP WILL ALL THE RELATIONS OF A SYMPTOM
+    //UPDATE THE TOOLTIP WITH ALL THE RELATIONS OF A SYMPTOM
     function updateTooltipGroup(d) {
       try{
         var info = matrix.read(d);    //info now has the symptom id (gid) and the symptom name (gname)
@@ -341,22 +341,25 @@ function createChordDirective (scope, data, selectedClass) {
               return d.class.sourceFile.name;
             },
             value: function (d, i) {
-                return d.class.sourceFile.fullyQualifiedName;
+              //return "oi";
+              return d.class.sourceFile.fullyQualifiedName;
             }
         })
         .property("checked", function (d, i) {
             $("#labelElement").html(selectedClass.name);
             return i === j;
         })
-        .on("click", function(d,i) {
+        .on("click", function(d) {
           inputClickEvent(d);            //UPDATE THE LIST OF SYMPTOMS IN THE RIGHT PANEL
         });
 
         // function that hadles the click event on the input
         function inputClickEvent(d) {
+          
           selectedClass.name = d.class.sourceFile.name;
           selectedClass.fullyQualifiedName = d.class.sourceFile.fullyQualifiedName;
-            
+          
+          
           $("#labelElement").html(selectedClass.name);
           showSymptoms(d);            //UPDATE THE LIST OF SYMPTOMS IN THE RIGHT PANEL
 
@@ -381,17 +384,14 @@ function createChordDirective (scope, data, selectedClass) {
 
 
   function showSymptoms(data) {
+    updateCSVSymptoms(data);
+    
     var container = $("#divSymptoms");
     container.empty();
 
     d3.select("#divSymptoms").selectAll("input")
       .data(data.class.syndrome)
       .enter()
-      /*.append('label')
-          .attr('for',function(d,i){ return 'a'+ i; })
-          .text(function(d) { 
-            return d.value + " "; 
-          })*/
       .append("div")
       .append("input")
           .attr("checked", true)
@@ -439,7 +439,7 @@ function createChordDirective (scope, data, selectedClass) {
   loadDataDiagram();
   showClassesPanel();
   drawChords(csv, el, false);
-
+  
 
   //MONITOR THE SELECT OF ALL SYMPTOMS
   $("#buttonSelectSymptoms").click(function (d){
@@ -453,13 +453,10 @@ function createChordDirective (scope, data, selectedClass) {
 
   //MONITOR THE SELECTION OF A CLASS
   $(".classElements").click(function (d){
+    
     try {
-      var retorno = prepareSymptoms(scope[d.target.value]);
-
-      csv = retorno[0];
-      relations = retorno[1];
-      symptoms = retorno[2];
-
+      updateCSVSymptoms(scope[d.target.value]);
+      
       drawChords(csv, el, false);
     } catch (error) {
       return;
@@ -468,6 +465,15 @@ function createChordDirective (scope, data, selectedClass) {
     
   });
   
+  //AUXILIAR FUNCTION TO KEEP THE SYMPTOMS UPDATED WITH THE SELECTED CLASS
+  function updateCSVSymptoms(value) {
+    
+    var retorno = prepareSymptoms(value);
+
+      csv = retorno[0];
+      relations = retorno[1];
+      symptoms = retorno[2];
+  }
 
   function resize() {
     var width = el.parent()[0].clientWidth;
@@ -480,10 +486,7 @@ function createChordDirective (scope, data, selectedClass) {
 
 
   resize();
-    
-  /*$window.addEventListener("resize", function () {
-    resize();
-  });*/
+   
 }; // END LINK FUNCTION
 
 
